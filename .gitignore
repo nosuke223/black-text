@@ -1,0 +1,5 @@
+# Claude Codeのレビュー結果
+reviews/*.md
+
+# ディレクトリは維持する
+!reviews/.gitkeep
