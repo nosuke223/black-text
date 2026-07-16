@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import Home from "./page";
 
@@ -13,6 +13,21 @@ function choose(name: string): void {
 
 function advance(): void {
   choose("次へ");
+}
+
+function completeSafeRoute(): void {
+  advance();
+  choose("黙って廊下へ出る");
+  choose("自分の足元と扉の周囲を確かめる");
+  choose("階段へ進む");
+  choose("何も言わず階段へ向かう");
+  choose("声がした方向と間隔を覚える");
+  choose("宿帳を詳しく調べる");
+  choose("明かりの残る正面廊下を進む");
+  choose("口を押さえて進む");
+  advance();
+  choose("「三度目には、返事をしない」という文面を読み返す");
+  choose("扉を開ける");
 }
 
 describe("Home", () => {
@@ -60,24 +75,70 @@ describe("Home", () => {
   it("手掛かりを確認した安全な経路で生還結果を表示する", () => {
     render(<Home />);
     startGame();
-    advance();
-    choose("黙って廊下へ出る");
-    choose("自分の足元と扉の周囲を確かめる");
-    choose("階段へ進む");
-    choose("何も言わず階段へ向かう");
-    choose("声がした方向と間隔を覚える");
-    choose("宿帳を詳しく調べる");
-    choose("明かりの残る正面廊下を進む");
-    choose("口を押さえて進む");
-    advance();
-    choose("「三度目には、返事をしない」という文面を読み返す");
-    choose("扉を開ける");
+    completeSafeRoute();
 
     expect(
       screen.getByRole("heading", { level: 2, name: "生還" }),
     ).toBeInTheDocument();
     expect(screen.getByText(/冷たい夜気が、肺に入る。/)).toBeInTheDocument();
-    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "記録を見る" }),
+    ).toBeInTheDocument();
+  });
+
+  it("結果後の記録に手掛かりと行動回数と最後の選択を表示する", () => {
+    const { container } = render(<Home />);
+    startGame();
+    completeSafeRoute();
+
+    choose("記録を見る");
+
+    const recordHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "RECORD",
+    });
+    expect(recordHeading).toHaveFocus();
+    expect(screen.getByText("選択した物").parentElement).toHaveTextContent(
+      "錆びた鈴",
+    );
+    expect(screen.getByText("声に返事をした回数").parentElement)
+      .toHaveTextContent("0回");
+    expect(screen.getByText("鈴を鳴らした回数").parentElement)
+      .toHaveTextContent("0回");
+    expect(screen.getByText("最後の選択").parentElement).toHaveTextContent(
+      "扉を開ける",
+    );
+    expect(screen.getByText("三度目には、返事をしないこと"))
+      .toBeInTheDocument();
+    expect(container).not.toHaveTextContent("CLUE-B");
+    expect(container).not.toHaveTextContent("entity_pressure");
+    expect(container).not.toHaveTextContent("fatal_violation");
+  });
+
+  it("保存できない場合も通知を表示し、再挑戦で初期画面へ戻る", () => {
+    vi.spyOn(URL, "createObjectURL").mockImplementationOnce(() => {
+      throw new Error("保存失敗");
+    });
+    render(<Home />);
+    startGame();
+    completeSafeRoute();
+    choose("記録を見る");
+
+    choose("プレイテスト記録を保存");
+
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "記録を保存できませんでした。再挑戦は続けられます。",
+    );
+
+    choose("もう一度試す");
+
+    expect(
+      screen.getByRole("heading", { level: 2, name: "錆びた鈴" }),
+    ).toHaveFocus();
+    expect(screen.getByRole("button", { name: "次へ" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "RECORD" }))
+      .not.toBeInTheDocument();
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 
   it("三度目の声へ返事をすると内部理由を出さずゲームオーバーを表示する", () => {

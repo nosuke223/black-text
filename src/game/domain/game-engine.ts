@@ -13,7 +13,10 @@ import {
   type FixedChoice,
   type FixedScene,
   type GameOverReason,
+  type ResponseState,
 } from "../scenarios/scenario-001/scenario";
+
+export const GAME_VERSION = "scenario-001-rules-v1" as const;
 
 export type GameEngineErrorCode =
   | "invalid_scene"
@@ -201,10 +204,14 @@ function getLastRouteChoice(
   return routeChoice.choice_id;
 }
 
-function hasRepliedBeforeSecondCall(state: GameState): boolean {
+export function getSecondCallResponseState(
+  state: GameState,
+): ResponseState {
   return state.choice_history.some(
     (entry) => entry.choice_id === "S01_REPLY",
-  );
+  )
+    ? "replied"
+    : "none";
 }
 
 function resolveChoiceResultText(
@@ -213,7 +220,7 @@ function resolveChoiceResultText(
 ): string | null {
   if (choice.id === "S05_REMEMBER_WORDS") {
     return choice.result?.text_by_response?.[
-      hasRepliedBeforeSecondCall(state) ? "replied" : "none"
+      getSecondCallResponseState(state)
     ] ?? null;
   }
 
@@ -425,9 +432,7 @@ export function getCurrentScene(state: GameState): FixedScene {
   if (scene.id === "S04") {
     return {
       ...scene,
-      text: S04_TEXT_BY_RESPONSE[
-        hasRepliedBeforeSecondCall(state) ? "replied" : "none"
-      ],
+      text: S04_TEXT_BY_RESPONSE[getSecondCallResponseState(state)],
     };
   }
 

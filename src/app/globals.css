@@ -46,7 +46,8 @@ button {
 }
 
 .title-screen,
-.game-frame {
+.game-frame,
+.record-frame {
   width: min(100%, 760px);
 }
 
@@ -108,6 +109,12 @@ button {
 }
 
 .game-frame {
+  display: flex;
+  min-height: min(720px, calc(100dvh - 64px));
+  flex-direction: column;
+}
+
+.record-frame {
   display: flex;
   min-height: min(720px, calc(100dvh - 64px));
   flex-direction: column;
@@ -228,12 +235,115 @@ button {
   margin-bottom: auto;
 }
 
+.result-actions {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: auto;
+}
+
 .result-mark {
-  margin: auto 0 0;
+  margin: 0;
   color: var(--quiet);
   font-size: 0.68rem;
   letter-spacing: 0.24em;
   text-align: right;
+}
+
+.record-panel {
+  width: min(100%, 650px);
+}
+
+.record-title {
+  margin: 0 0 42px;
+  color: var(--muted);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  outline: none;
+}
+
+.record-title:focus-visible {
+  outline: 1px solid var(--foreground);
+  outline-offset: 8px;
+}
+
+.record-list {
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+
+.record-row {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.8fr) minmax(0, 1.7fr);
+  gap: 28px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.record-row dt {
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+}
+
+.record-row dd {
+  margin: 0;
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  line-height: 1.85;
+  white-space: pre-line;
+}
+
+.record-clues {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.record-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 52px;
+}
+
+.record-button,
+.text-button {
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  cursor: pointer;
+}
+
+.record-button {
+  padding: 14px 18px;
+}
+
+.text-button {
+  padding: 14px 8px;
+  border-color: transparent;
+  color: var(--muted);
+}
+
+.record-button:hover,
+.text-button:hover {
+  border-color: var(--foreground);
+  color: var(--foreground);
+}
+
+.record-button:focus-visible,
+.text-button:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 3px;
+}
+
+.save-status {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
 }
 
 @media (max-width: 600px) {
@@ -242,7 +352,8 @@ button {
   }
 
   .title-screen,
-  .game-frame {
+  .game-frame,
+  .record-frame {
     min-height: calc(100dvh - 64px);
   }
 
@@ -255,6 +366,25 @@ button {
   }
 
   .continue-button {
+    width: 100%;
+  }
+
+  .result-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .record-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .record-actions {
+    flex-direction: column;
+  }
+
+  .record-button,
+  .text-button {
     width: 100%;
   }
 }
