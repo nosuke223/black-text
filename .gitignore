@@ -4,6 +4,9 @@ reviews/*.md
 # ディレクトリは維持する
 !reviews/.gitkeep
 
+# Claude Codeのローカル設定（個人環境ごとの権限承認履歴）
+.claude/settings.local.json
+
 # 依存関係
 /node_modules/
 

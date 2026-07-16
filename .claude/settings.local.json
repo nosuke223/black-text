@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "PowerShell(git status --short; git diff --check; git diff --cached --check; Write-Output \"--- check done \\(exit: $LASTEXITCODE\\)\")",
-      "PowerShell(git add -N CLAUDE.md .claude reviews; git diff --check; Write-Output \"--- check exit: $LASTEXITCODE\"; git reset -q; git status --short)"
-    ]
-  }
-}
