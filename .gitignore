@@ -31,6 +31,10 @@ next-env.d.ts
 # ログ
 npm-debug.log*
 
+# プレイテスト回収データ
+/playtest-results/
+black-text-playtest-*.json
+
 # デプロイ設定
 .vercel/
 

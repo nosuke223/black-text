@@ -127,7 +127,7 @@ async function expectGameOver(page: Page): Promise<void> {
   ).toBeVisible();
 }
 
-test("CLUE-Bを取得した低圧経路で直接脱出し、JSON保存後に再挑戦できる", async ({
+test("@preview-smoke CLUE-Bを取得した低圧経路で直接脱出し、JSON保存後に再挑戦できる", async ({
   page,
 }) => {
   await playToEntrance(page);
@@ -188,7 +188,7 @@ test("鈴を二回以内で使い、背後を見ずに脱出する", async ({ pa
   await expectClear(page);
 });
 
-test("三度目の呼びかけに返事をするとゲームオーバーになる", async ({
+test("@preview-smoke 三度目の呼びかけに返事をするとゲームオーバーになる", async ({
   page,
 }) => {
   await playToThirdCall(page, { inspectBook: false });
