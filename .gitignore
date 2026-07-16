@@ -3,3 +3,34 @@ reviews/*.md
 
 # ディレクトリは維持する
 !reviews/.gitkeep
+
+# 依存関係
+/node_modules/
+
+# Next.js
+/.next/
+/out/
+
+# ビルド・テスト生成物
+/build/
+/coverage/
+/playwright-report/
+/test-results/
+
+# ローカル環境変数
+.env*
+!.env.example
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# ログ
+npm-debug.log*
+
+# デプロイ設定
+.vercel/
+
+# OS
+.DS_Store
+Thumbs.db
